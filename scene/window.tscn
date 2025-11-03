@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxp3nnabegmnd"]
+
+[ext_resource type="Script" uid="uid://k4itqhvl1x28" path="res://scene/window.gd" id="1_aitir"]
+[ext_resource type="Texture2D" uid="uid://dki0dvt64s2nt" path="res://icon.svg" id="2_2x567"]
+
+[node name="Window" type="Window"]
+transparent_bg = true
+oversampling_override = 1.0
+size = Vector2i(512, 512)
+borderless = true
+always_on_top = true
+transparent = true
+script = ExtResource("1_aitir")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(64, 63)
+texture = ExtResource("2_2x567")
+offset = Vector2(256, 256)
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+oversampling_override = 1.0
+size = Vector2i(100, 116)
+visible = true
+hide_on_checkable_item_selection = false
+item_count = 4
+item_0/text = "待办"
+item_0/id = 0
+item_1/text = "番茄时钟"
+item_1/id = 1
+item_2/id = 3
+item_2/separator = true
+item_3/text = "取消"
+item_3/id = 10
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
