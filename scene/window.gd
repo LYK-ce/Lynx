@@ -4,6 +4,10 @@ var dragging   = false
 var click_pos  = Vector2()          # 鼠标在屏幕上的按下点
 var orig_pos   = Vector2()          # 窗口原始位置
 
+
+@onready var anim :AnimatedSprite2D = $AnimatedSprite2D
+signal action(_next_state)
+
 #右键弹出菜单
 @onready var menu : PopupMenu = $PopupMenu
 
@@ -13,6 +17,10 @@ var orig_pos   = Vector2()          # 窗口原始位置
 var client := HTTPClient.new()
 
 func _ready() -> void:
+	#上来之后先播放动画
+	self.action.connect(anim.Play_Anim)
+	self.action.emit(Global_Parameters.State.Idle)
+	
 	menu.id_pressed.connect(_on_menu_selected)
 	
 	var err := client.connect_to_host(HOST, PORT)
@@ -31,10 +39,12 @@ func _input(event):
 			var rect := Rect2(position, size)
 			if rect.has_point(mp):
 				dragging  = true
+				action.emit(Global_Parameters.State.Drag)
 				click_pos = mp
 				orig_pos  = position
 		else:
 			dragging = false
+			action.emit(Global_Parameters.State.Idle)
 
 	elif event is InputEventMouseMotion and dragging:
 		# 计算屏幕位移，直接改窗口位置
@@ -48,7 +58,10 @@ func _on_menu_selected(id: int) -> void:
 			print('button1 pressed')
 			send('daiban')
 		1: print('button2 pressed')
-		10: get_tree().quit()
+		
+		#暂时先什么都不做
+		10: pass
+			#get_tree().quit()
 
 func send(cmd: String) -> void:
 	if client.get_status() != HTTPClient.STATUS_CONNECTED:
