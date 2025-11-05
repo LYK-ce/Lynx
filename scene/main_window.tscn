@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxu7yun35rla5"]
+
+[ext_resource type="Script" uid="uid://b5pr24nxbqtx5" path="res://scene/main_window.gd" id="1_55ks2"]
+[ext_resource type="PackedScene" uid="uid://bnht2t72gcyoh" path="res://scene/set_focus_page.tscn" id="1_qtdy8"]
+[ext_resource type="PackedScene" uid="uid://ctbbthhoddtnq" path="res://scene/Focusing_Page.tscn" id="3_h4r5k"]
+
+[node name="Main_Window" type="Window"]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(1152, 648)
+script = ExtResource("1_55ks2")
+Page = Array[PackedScene]([ExtResource("1_qtdy8"), ExtResource("3_h4r5k")])
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
