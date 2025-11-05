@@ -1,4 +1,5 @@
 extends Window
+class_name Pet
 
 var dragging   = false
 var click_pos  = Vector2()          # 鼠标在屏幕上的按下点
@@ -7,6 +8,7 @@ var orig_pos   = Vector2()          # 窗口原始位置
 
 @onready var anim :AnimatedSprite2D = $AnimatedSprite2D
 signal action(_next_state)
+signal command(_order)
 
 #右键弹出菜单
 @onready var menu : PopupMenu = $PopupMenu
@@ -57,12 +59,16 @@ func _on_menu_selected(id: int) -> void:
 		0: 
 			print('button1 pressed')
 			send('daiban')
+			command.emit('daiban')
 		1: print('button2 pressed')
 		
 		#暂时先什么都不做
 		10: pass
 			#get_tree().quit()
-
+func Take_Action(_next_state):
+	print('take action',_next_state)
+	action.emit(_next_state)
+	
 func send(cmd: String) -> void:
 	if client.get_status() != HTTPClient.STATUS_CONNECTED:
 		client.connect_to_host(HOST, PORT)

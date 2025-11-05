@@ -24,6 +24,9 @@ func Play_Anim(_next_state):
 		Global_Parameters.State.Drag:
 			state = _next_state
 			play("Drag")
+		Global_Parameters.State.Sleep:
+			state = _next_state
+			play("Sleep")
 	pass
 	
 	

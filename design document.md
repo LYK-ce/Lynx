@@ -71,3 +71,11 @@ func send(cmd: String, data: Dictionary = {}) -&gt; void:
     var body := JSON.stringify({"cmd":cmd} . merge(data))
     http.request(HTTPClient.METHOD_POST, "/",
                 ["Content-Type: application/json"], body.utf8())
+
+## WebSocket方案（目前确定的方案）
+WebSocket是一种全双工、低延迟、长连接的网络通信协议，运行在TCP之上。它允许客户端与服务器在一条持久连接上随时弧线推送数据，无需想Http那样一问一答。HTTP的服务器如果想主动给浏览器推送消息，只能用轮询，长轮询，SSE等方式。
+
+Websocket的客户端先走HTTP发一个Upgrade请求，然后服务器回101 switching protocols。此后不再走HTTP，双方用自定义帧格式互相发消息，连接保持到任意一方关闭。
+
+   
+   
