@@ -4,7 +4,8 @@ enum State{
 	Idle,
 	Run,
 	Drag,
-	Sleep
+	Sleep,
+	Notice
 }
 
 var focus_minutes : int = 0

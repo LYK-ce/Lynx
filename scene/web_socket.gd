@@ -49,6 +49,15 @@ func _process(_delta: float) -> void:
 			peer.accept_stream(raw_tcp)             # 把连接升级成 WebSocket
 			has_peer = true
 			print("唯一客户端已接入")
+			#建立连接之后就订阅它发送的消息
+			var data = {
+				"type": "listen",
+				"body": {
+				"channel": "placeholder"
+				}
+			}
+			var json_data = JSON.stringify(data)
+			Send(json_data)
 		
 	
 	if peer == null:
@@ -63,9 +72,14 @@ func _process(_delta: float) -> void:
 			if peer.was_string_packet():
 				var packet_text = packet.get_string_from_utf8()
 				print('receive text',packet_text)
+				var json = JSON.new()
+				var error = json.parse(packet_text)
+				
+				if error == OK:
+					var data = json.data
 				#todo
 				#根据输入命令，进行相应的操作
-				action.emit(Global.State.Sleep)
+				action.emit(Global.State.Notice)
 				# Echo the packet back.
 				#peer.send_text(packet_text)
 			else:

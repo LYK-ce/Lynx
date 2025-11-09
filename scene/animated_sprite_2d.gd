@@ -6,6 +6,8 @@ var state = Global.State.Idle
 var anim_list
 var idle_anims = []
 
+@onready var audio : AudioStreamPlayer = $AudioStreamPlayer
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	anim_list = sprite_frames.get_animation_names()
@@ -27,6 +29,11 @@ func Play_Anim(_next_state):
 		Global.State.Sleep:
 			state = _next_state
 			play("Sleep")
+		Global.State.Notice:
+			state = _next_state
+			play("Notice")
+			audio.play()
+			
 	pass
 	
 	
