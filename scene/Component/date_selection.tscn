@@ -1,10 +1,13 @@
-[gd_scene format=3 uid="uid://bmgrc2rtmwni6"]
+[gd_scene load_steps=2 format=3 uid="uid://bmgrc2rtmwni6"]
+
+[ext_resource type="Script" uid="uid://ui3j7jwmg36q" path="res://scene/Component/date_selection.gd" id="1_7ycu3"]
 
 [node name="DateSelection" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("1_7ycu3")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
@@ -14,74 +17,44 @@ offset_bottom = 40.0
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="OptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="YearButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Year" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "年"
 
-[node name="OptionButton2" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="MonthButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-selected = 0
-item_count = 12
-popup/item_0/text = "1"
-popup/item_0/id = 0
-popup/item_1/text = "2"
-popup/item_1/id = 1
-popup/item_2/text = "3"
-popup/item_2/id = 2
-popup/item_3/text = "4"
-popup/item_3/id = 3
-popup/item_4/text = "5"
-popup/item_4/id = 4
-popup/item_5/text = "6"
-popup/item_5/id = 5
-popup/item_6/text = "7"
-popup/item_6/id = 6
-popup/item_7/text = "8"
-popup/item_7/id = 7
-popup/item_8/text = "9"
-popup/item_8/id = 8
-popup/item_9/text = "10"
-popup/item_9/id = 9
-popup/item_10/text = "11"
-popup/item_10/id = 10
-popup/item_11/text = "12"
-popup/item_11/id = 11
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Month" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "月"
 
-[node name="OptionButton3" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
+[node name="DayButton" type="OptionButton" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Day" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "日"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="SpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
+[node name="HourSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 max_value = 24.0
 rounded = true
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="Hour" type="Label" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "时"
 
-[node name="SpinBox2" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
+[node name="MinuteSpinBox" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 max_value = 60.0
 rounded = true
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="Minute" type="Label" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "分"
-
-[node name="Button" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "确认"
