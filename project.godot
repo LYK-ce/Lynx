@@ -11,16 +11,18 @@ config_version=5
 [application]
 
 config/name="Lynx"
-run/main_scene="uid://bxp3nnabegmnd"
+run/main_scene="uid://n5w4g7nq6bjr"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://scene/Global.gd"
+Global="*res://scene/Global/Global.gd"
+EventBus="*res://scene/Global/EventBus.gd"
 
 [display]
 
+window/size/mode=1
 window/size/borderless=true
 window/size/transparent=true
 window/subwindows/embed_subwindows=false

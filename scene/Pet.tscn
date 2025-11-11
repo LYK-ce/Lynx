@@ -560,7 +560,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"Run_Left",
-"speed": 3.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -580,7 +580,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"Run_Right",
-"speed": 3.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -601,14 +601,15 @@ size = Vector2i(256, 256)
 borderless = true
 always_on_top = true
 transparent = true
+popup_window = true
 script = ExtResource("1_dtm6e")
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
 oversampling_override = 1.0
-size = Vector2i(100, 116)
+size = Vector2i(100, 120)
 visible = true
 hide_on_checkable_item_selection = false
-item_count = 4
+item_count = 5
 item_0/text = "待办"
 item_0/id = 0
 item_1/text = "番茄时钟"
@@ -617,6 +618,8 @@ item_2/id = 3
 item_2/separator = true
 item_3/text = "取消"
 item_3/id = 10
+item_4/text = "退出"
+item_4/id = 11
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
@@ -625,9 +628,9 @@ texture_filter = 1
 position = Vector2(128, 128)
 scale = Vector2(4, 4)
 sprite_frames = SubResource("SpriteFrames_dsjjd")
-animation = &"Notice"
-frame = 5
-frame_progress = 1.0
+animation = &"Run_Left"
+frame = 4
+frame_progress = 0.45757562
 script = ExtResource("3_isedw")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="AnimatedSprite2D"]
@@ -636,6 +639,7 @@ stream = ExtResource("5_o5c6p")
 [node name="WebSocket" parent="." instance=ExtResource("4_iw1pq")]
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 15.0
 autostart = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="AnimatedSprite2D" method="_on_animation_finished"]

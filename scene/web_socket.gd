@@ -20,8 +20,9 @@ func _ready():
 	if pet is not Pet:
 		print('not on a pet node')
 	else:
-		pet.command.connect(Send)
-		action.connect(pet.Take_Action)
+		EventBus.sig_order.connect(Send)
+
+
 	#监听端口，尝试建立连接
 	var err = tcp_server.listen(PORT)
 	if err == OK:
@@ -79,9 +80,7 @@ func _process(_delta: float) -> void:
 					var data = json.data
 				#todo
 				#根据输入命令，进行相应的操作
-				action.emit(Global.State.Notice)
-				# Echo the packet back.
-				#peer.send_text(packet_text)
+				EventBus.sig_request_state_change.emit(Global.State.Notice)
 			else:
 				print('unknown information')
 				

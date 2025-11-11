@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://n5w4g7nq6bjr"]
+
+[ext_resource type="Script" uid="uid://dn4yqg3x781ti" path="res://node_2d.gd" id="1_wtcfe"]
+[ext_resource type="PackedScene" uid="uid://bxp3nnabegmnd" path="res://scene/Pet.tscn" id="2_0e48y"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_wtcfe")
+
+[node name="Pet" parent="." instance=ExtResource("2_0e48y")]
