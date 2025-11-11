@@ -17,7 +17,7 @@ var tween : Tween
 @onready var menu : PopupMenu = $PopupMenu
 
 #与其他组件的交互
-@export var HOST := "127.0.0.1"
+@export var HOST := "10.100.73.11"
 @export var PORT := 8787
 var client := HTTPClient.new()
 
@@ -85,21 +85,32 @@ func _on_menu_selected(id: int) -> void:
 		0: 
 			var data = {
 				  "type": "call",
-				  "body": 
-					{
-						"id": "123",
-						"method": "create_todo",
-						"params": 
-						{
-					  		"title": "新待办事项"
-						}
-  					}
-			}
+				  "body": {
+					"id": "7",
+					"method": "window.show"
+				  }
+				}
 			#转换成json字符串
 			var json_string = JSON.stringify(data)
 			EventBus.sig_order.emit(json_string)
 			Try_Enter_State(Global.State.Sleep)
-		1: print('button2 pressed')
+		1: 
+			var data = {
+					  "type": "call",
+					  "body": 
+						{
+							"id": "123",
+							"method": "create_todo",
+							"params": 
+							{
+						  		"title": "新待办事项"
+							}
+	  					}
+				}
+				#转换成json字符串
+			var json_string = JSON.stringify(data)
+			EventBus.sig_order.emit(json_string)
+			Try_Enter_State(Global.State.Sleep)
 		
 		#暂时先什么都不做
 		10: pass

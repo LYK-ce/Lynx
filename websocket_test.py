@@ -1,31 +1,16 @@
-#!/usr/bin/env python3
-import asyncio, json, random, signal, sys
-import websockets
+import asyncio, websockets
 
-URI = "ws://127.0.0.1:9080"
-
-async def sender(ws):
-    while True:
-        msg = {"cmd": "heartbeat", "value": random.randint(0, 100)}
-        await ws.send(json.dumps(msg))
-        print("-> sent:", msg)
-        await asyncio.sleep(2)
-
-async def receiver(ws):
-    async for raw in ws:
-        print("<- recv:", raw)
+async def on_connect(websocket):
+    print(">>> 有客户端连上了")
+    async for msg in websocket:              # 持续收消息
+        print("收到消息:", msg)
+        await websocket.send("服务端已收到: " + msg)  # 回一条
+    print("<<< 客户端已断开")
 
 async def main():
-    # 1. 正确写法：websockets.connect
-    async with websockets.connect(URI) as ws:
-        print("Connected to", URI)
-        # 2. 用 asyncio.gather 即可
-        await asyncio.gather(sender(ws), receiver(ws))
-
-def exit_handler(sig, frame):
-    print("\nShutting down...")
-    sys.exit(0)
+    async with websockets.serve(on_connect, "localhost", 8765):
+        print("WebSocket 服务已启动 ws://localhost:8765")
+        await asyncio.Future()               # 一直跑着
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGINT, exit_handler)   # 3. 正确常量：SIGINT
     asyncio.run(main())

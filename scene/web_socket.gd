@@ -1,92 +1,94 @@
-'''
-WebSocket节点，通过这个节点与外部的进程进行通信。
-这个节点完全通过信号的方式与桌面宠物的主要组件相连，这样即便不存在这个组件，桌面宠物也意识不到。
-'''
 extends Node
-class_name WebSocket
+class_name WebSocket          # 类名不变，外部无感
 
-@export var PORT = 9080
-var tcp_server = TCPServer.new()
-var peer :WebSocketPeer = null
-var has_peer:bool = false
+#@export var URL := "ws://127.0.0.1:8787/ws"  # 对方服务器地址
+@export var URL := "ws://10.100.66.12:8787/ws" 
+#@export var URL := "ws://127.0.0.1:8787"
+@export var AUTO_RECONNECT := true
+
+var _peer: WebSocketPeer
+var _has_peer: bool = false
 var pet
 
-signal action(_next_state)
 
-#启动服务器，游戏启动时监听9080
-func _ready():
-	#首先与宠物建立连接
+func _ready() -> void:
 	pet = get_parent()
-	if pet is not Pet:
-		print('not on a pet node')
+	if pet is Pet:
+		EventBus.sig_order.connect(_send_text)
 	else:
-		EventBus.sig_order.connect(Send)
+		push_warning("未挂在 Pet 节点下")
 
+	_connect()          # 主动去连
+	set_process(true)   # 每帧 poll
 
-	#监听端口，尝试建立连接
-	var err = tcp_server.listen(PORT)
-	if err == OK:
-		print("Server started.")
-	else:
-		push_error("Unable to start server.")
-		set_process(false)
-
-func Send(_text):
-	if peer != null:
-		peer.send_text(_text)
-	else:
-		print('there is no connection!')
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	while tcp_server.is_connection_available():
-		var raw_tcp = tcp_server.take_connection()  # 一定要先接住
-		if has_peer:
-			raw_tcp.disconnect_from_host()          # ① 礼貌断开
-			raw_tcp = null                          # ② 释放引用
-			print("已有一条连接，拒绝新客户端")
-		else:
-			peer = WebSocketPeer.new()
-			peer.accept_stream(raw_tcp)             # 把连接升级成 WebSocket
-			has_peer = true
-			print("唯一客户端已接入")
-			#建立连接之后就订阅它发送的消息
-			var data = {
-				"type": "listen",
-				"body": {
-				"channel": "placeholder"
-				}
-			}
-			var json_data = JSON.stringify(data)
-			Send(json_data)
-		
-	
-	if peer == null:
+	if _peer:
+		_peer.poll()
+		var state = _peer.get_ready_state()
+		if state == WebSocketPeer.STATE_OPEN:
+			_recv_packets()
+		elif state == WebSocketPeer.STATE_CLOSED:
+			print('state closed')
+			_on_close()
+
+# ---------- 客户端连接 ----------
+func _connect() -> void:
+	_peer = WebSocketPeer.new()
+	var err = _peer.connect_to_url(URL)  # ← 关键：客户端模式
+	if err != OK:
+		push_error("连接失败：", err)
+		if AUTO_RECONNECT:
+			await get_tree().create_timer(5.0).timeout
+			_connect()
 		return
-	
-	peer.poll()
-	
-	var peer_state = peer.get_ready_state()
-	if peer_state == WebSocketPeer.STATE_OPEN:
-		while peer.get_available_packet_count():
-			var packet = peer.get_packet()
-			if peer.was_string_packet():
-				var packet_text = packet.get_string_from_utf8()
-				print('receive text',packet_text)
-				var json = JSON.new()
-				var error = json.parse(packet_text)
-				
-				if error == OK:
-					var data = json.data
-				#todo
-				#根据输入命令，进行相应的操作
-				EventBus.sig_request_state_change.emit(Global.State.Notice)
-			else:
-				print('unknown information')
-				
-	elif peer_state == WebSocketPeer.STATE_CLOSED:
-		var code = peer.get_close_code()
-		var reason = peer.get_close_reason()
-		print("Peer closed with code: %d, reason %s. Clean: %s" % [code, reason, code != -1])
-		peer = null
-		
+	print('err is:',err)
+	_has_peer = true
+	print("正在连接：", URL)
+	await get_tree().create_timer(5.0).timeout
+	var data = {
+		  "type": "listen",
+		  "body": {
+			"channel": "todo.due"
+		  }
+		}
+	var json_string = JSON.stringify(data)
+	_send_text(json_string)
+
+func _on_close() -> void:
+	print("连接已关闭")
+	_peer = null
+	_has_peer = false
+	if AUTO_RECONNECT:
+		await get_tree().create_timer(2.0).timeout
+		_connect()
+
+# ---------- 收发 ----------
+func _send_text(text: String) -> void:
+	print('try to send packet')
+	if _has_peer and _peer.get_ready_state() == WebSocketPeer.STATE_OPEN:
+		_peer.send_text(text)
+	else:
+		push_warning("无连接，丢弃消息：", text)
+
+func _recv_packets() -> void:
+	while _peer.get_available_packet_count():
+		var pkt = _peer.get_packet()
+		if _peer.was_string_packet():
+			var txt = pkt.get_string_from_utf8()
+			
+			print("收到：", txt)
+			var data = JSON.parse_string(txt)   # Godot 4.x 写法
+			if data == null:
+				push_error("非法 JSON，已丢弃")
+			print(data)
+			   
+			# 原逻辑
+			EventBus.sig_request_state_change.emit(Global.State.Notice)
+
+# ---------- 工具 ----------
+func _parse_and_emit(json_txt: String) -> void:
+	var j = JSON.new()
+	if j.parse(json_txt) != OK:
+		push_warning("JSON 解析失败")
+		return
+	# todo 具体业务
