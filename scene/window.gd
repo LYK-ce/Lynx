@@ -155,3 +155,8 @@ func Random_Move():
 
 
 	
+
+#失去焦点时触发此函数
+func _on_focus_exited() -> void:
+	menu.hide()
+ 

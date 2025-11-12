@@ -44,7 +44,8 @@ func _connect() -> void:
 	print('err is:',err)
 	_has_peer = true
 	print("正在连接：", URL)
-	await get_tree().create_timer(5.0).timeout
+	#过1秒之后在发送订阅消息。
+	await get_tree().create_timer(1.0).timeout
 	var data = {
 		  "type": "listen",
 		  "body": {
