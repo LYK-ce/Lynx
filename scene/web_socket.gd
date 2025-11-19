@@ -1,8 +1,8 @@
 extends Node
 class_name WebSocket          # 类名不变，外部无感
 
-#@export var URL := "ws://127.0.0.1:8787/ws"  # 对方服务器地址
-@export var URL := "ws://10.100.73.11:8787/ws" 
+@export var URL := "ws://127.0.0.1:8787/ws"  # 对方服务器地址
+#@export var URL := "ws://10.100.73.11:8787/ws" 
 #@export var URL := "ws://127.0.0.1:8787"
 @export var AUTO_RECONNECT := true
 
@@ -46,13 +46,22 @@ func _connect() -> void:
 	print("正在连接：", URL)
 	#过1秒之后在发送订阅消息。
 	await get_tree().create_timer(1.0).timeout
-	var data = {
+	var register_todo = {
 		  "type": "listen",
 		  "body": {
 			"channel": "todo.due"
 		  }
 		}
-	var json_string = JSON.stringify(data)
+	var json_string = JSON.stringify(register_todo)
+	_send_text(json_string)
+	
+	var register_clock = {
+		  "type": "listen",
+		  "body": {
+			"channel": "pomodoro.events"
+		  }
+		}
+	json_string = JSON.stringify(register_clock)
 	_send_text(json_string)
 
 func _on_close() -> void:
@@ -83,8 +92,15 @@ func _recv_packets() -> void:
 			if data == null:
 				push_error("非法 JSON，已丢弃")
 			print(data)
-			if data['type'] == 'event':
+			if data['body']['channel'] == 'pomodoro.events':
+				if data['body']['data']['type'] == 'start':
+					EventBus.sig_request_state_change.emit(Global.State.Sleep)
+				else:
+					EventBus.sig_request_state_change.emit(Global.State.Notice)
+			if data['body']['channel'] == 'todo.due':
+				pet.last_state = Global.State.Sleep
 				EventBus.sig_request_state_change.emit(Global.State.Notice)
+				
 			# 原逻辑
 			
 

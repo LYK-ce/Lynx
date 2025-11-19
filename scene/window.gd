@@ -2,8 +2,9 @@ extends Window
 class_name Pet
 
 #记录一下当前宠物的状态。感觉还是用一个状态机的方式来实现更好一些。
+var last_state : Global.State = Global.State.Undefined
 var state : Global.State = Global.State.Idle
-var speed  = 50
+var is_running  :bool = false
 var is_dragging = false
 
 var click_pos  = Vector2()          # 鼠标在屏幕上的按下点
@@ -17,18 +18,23 @@ var tween : Tween
 #右键弹出菜单
 @onready var menu : PopupMenu = $PopupMenu
 
-#与其他组件的交互
-@export var HOST := "10.100.73.11"
-@export var PORT := 8787
-var client := HTTPClient.new()
+##与其他组件的交互
+#@export var HOST := "10.100.73.11"
+#@export var PORT := 8787
+#var client := HTTPClient.new()
 
 #现在让我们来实现一个状态机，首先是尝试进入一个新的状态
 #整体状态机似乎不用设置的太复杂，毕竟可互动的内容暂时较少。
 func Try_Enter_State(_next_state : Global.State):
 	#在更新状态之前，我们需要进行一下判断
 	#如果是Idle状态，那么就随意进入一个新的状态好了
-	if state == Global.State.Idle:
-		pass
+	#if _next_state != Global.State.Run_Left or _next_state != Global.State.Run_Right:
+		#if tween != null and tween.is_running():
+				#tween.kill()
+	if state == Global.State.Notice:
+		if last_state == Global.State.Sleep:
+			_next_state = Global.State.Sleep
+			last_state = Global.State.Undefined
 	#如果是在睡眠状态，那么就需要根据下一个进入的状态来进行改动
 	elif state == Global.State.Sleep:
 		#只有下一个状态是Idle状态时或者通知状态时，它才进入到下一个状态当中，否则拒绝改变状态
@@ -55,9 +61,9 @@ func _ready() -> void:
 	
 	
 	#准备与外部进行连接，如果是godot自行组织的话，那么这里就不需要了
-	var err := client.connect_to_host(HOST, PORT)
-	if err != OK:
-		push_error("外部管道未启动")
+	#var err := client.connect_to_host(HOST, PORT)
+	#if err != OK:
+		#push_error("外部管道未启动")
 	#var mainwindow = get_parent().get_parent()
 	#mainwindow.visible = false
 	self.force_native = false
@@ -110,24 +116,19 @@ func _on_menu_selected(id: int) -> void:
 			#转换成json字符串
 			var json_string = JSON.stringify(data)
 			EventBus.sig_order.emit(json_string)
-			Try_Enter_State(Global.State.Sleep)
+		
 		1: 
 			var data = {
-					  "type": "call",
-					  "body": 
-						{
-							"id": "123",
-							"method": "create_todo",
-							"params": 
-							{
-						  		"title": "新待办事项"
-							}
-	  					}
+				  "type": "call",
+				  "body": {
+					"id": "7",
+					"method": "window.show"
+				  }
 				}
 				#转换成json字符串
 			var json_string = JSON.stringify(data)
 			EventBus.sig_order.emit(json_string)
-			Try_Enter_State(Global.State.Sleep)
+			
 		
 		#暂时先什么都不做
 		10: pass

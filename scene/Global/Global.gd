@@ -6,7 +6,8 @@ enum State{
 	Run_Right,
 	Drag,
 	Sleep,
-	Notice
+	Notice,
+	Undefined
 }
 
 var focus_minutes : int = 0
