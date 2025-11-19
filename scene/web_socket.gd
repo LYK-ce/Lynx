@@ -2,7 +2,7 @@ extends Node
 class_name WebSocket          # 类名不变，外部无感
 
 #@export var URL := "ws://127.0.0.1:8787/ws"  # 对方服务器地址
-@export var URL := "ws://10.100.66.12:8787/ws" 
+@export var URL := "ws://10.100.73.11:8787/ws" 
 #@export var URL := "ws://127.0.0.1:8787"
 @export var AUTO_RECONNECT := true
 
@@ -77,14 +77,16 @@ func _recv_packets() -> void:
 		if _peer.was_string_packet():
 			var txt = pkt.get_string_from_utf8()
 			
-			print("收到：", txt)
+			
 			var data = JSON.parse_string(txt)   # Godot 4.x 写法
+			print("收到：", data)
 			if data == null:
 				push_error("非法 JSON，已丢弃")
 			print(data)
-			   
+			if data['type'] == 'event':
+				EventBus.sig_request_state_change.emit(Global.State.Notice)
 			# 原逻辑
-			EventBus.sig_request_state_change.emit(Global.State.Notice)
+			
 
 # ---------- 工具 ----------
 func _parse_and_emit(json_txt: String) -> void:

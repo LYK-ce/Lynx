@@ -4,6 +4,7 @@ class_name Pet
 #记录一下当前宠物的状态。感觉还是用一个状态机的方式来实现更好一些。
 var state : Global.State = Global.State.Idle
 var speed  = 50
+var is_dragging = false
 
 var click_pos  = Vector2()          # 鼠标在屏幕上的按下点
 var orig_pos   = Vector2()          # 窗口原始位置
@@ -24,8 +25,22 @@ var client := HTTPClient.new()
 #现在让我们来实现一个状态机，首先是尝试进入一个新的状态
 #整体状态机似乎不用设置的太复杂，毕竟可互动的内容暂时较少。
 func Try_Enter_State(_next_state : Global.State):
+	#在更新状态之前，我们需要进行一下判断
+	#如果是Idle状态，那么就随意进入一个新的状态好了
+	if state == Global.State.Idle:
+		pass
+	#如果是在睡眠状态，那么就需要根据下一个进入的状态来进行改动
+	elif state == Global.State.Sleep:
+		#只有下一个状态是Idle状态时或者通知状态时，它才进入到下一个状态当中，否则拒绝改变状态
+		if  _next_state == Global.State.Notice:
+			pass
+		else:
+			return
+		
+		
 	#更新新的状态，然后触发全局总线的信号。
 	state = _next_state
+	
 	EventBus.sig_state_change.emit(_next_state)
 
 func _ready() -> void:
@@ -69,11 +84,13 @@ func _input(event):
 				Try_Enter_State(Global.State.Drag)
 				click_pos = mp
 				orig_pos  = position
+				is_dragging = true
 		else:
+			is_dragging = false
 			Try_Enter_State(Global.State.Idle)
 
 
-	elif event is InputEventMouseMotion and state == Global.State.Drag:
+	elif event is InputEventMouseMotion  and is_dragging == true:
 		# 计算屏幕位移，直接改窗口位置
 		var mp := DisplayServer.mouse_get_position()
 		position = orig_pos + mp - click_pos
@@ -121,7 +138,12 @@ func _on_menu_selected(id: int) -> void:
 
 #一个计时功能，时间到后，给小猫往左往右一个随机的位置，然后让它跑过去。
 func _on_timer_timeout() -> void:
-	call_deferred("Random_Move")
+	#只有在Idle状态下才会执行此操作
+	if state == Global.State.Idle:
+		call_deferred("Random_Move")
+	#其他状态下就完全不动了
+	else:
+		return
 
 #目前的结论是无法使用tween节点来调整window的位置。这也太怪了。
 func Random_Move():
