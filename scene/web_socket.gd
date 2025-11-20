@@ -17,9 +17,12 @@ func _ready() -> void:
 		EventBus.sig_order.connect(_send_text)
 	else:
 		push_warning("未挂在 Pet 节点下")
-
-	_connect()          # 主动去连
-	set_process(true)   # 每帧 poll
+	
+	if pet.web_socket_enable == false:
+		self.process_mode=Node.PROCESS_MODE_DISABLED
+	else:
+		_connect()          # 主动去连
+		set_process(true)   # 每帧 poll
 
 func _process(_delta: float) -> void:
 	if _peer:

@@ -7,6 +7,7 @@ enum State{
 	Drag,
 	Sleep,
 	Notice,
+	Pat,
 	Undefined
 }
 

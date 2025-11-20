@@ -18,6 +18,8 @@ var tween : Tween
 #右键弹出菜单
 @onready var menu : PopupMenu = $PopupMenu
 
+#是否启用WebSocket
+@export var web_socket_enable : bool = true
 ##与其他组件的交互
 #@export var HOST := "10.100.73.11"
 #@export var PORT := 8787
@@ -183,3 +185,21 @@ func Random_Move():
 func _on_focus_exited() -> void:
 	menu.hide()
  
+
+#增加互动的功能，摸头的具体实现位置
+func _on_pat_mouse_entered() -> void:
+	print('mouse entered')
+	#todo
+	#这里准备尝试进入pat状态
+	pass # Replace with function body.
+
+func _on_pat_mouse_exited() -> void:
+	print('mouse exited')
+	#这里尝试退出Pat状态
+	#如果处于pat状态时我们才能退出Pat状态
+	if state == Global.State.Pat:
+		Try_Enter_State(Global.State.Idle)
+	#如果不处在Pat状态就不用管了
+	else:
+		return
+	pass # Replace with function body.
