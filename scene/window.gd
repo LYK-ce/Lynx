@@ -44,6 +44,13 @@ func Try_Enter_State(_next_state : Global.State):
 			pass
 		else:
 			return
+	
+	#按理说每一个状态应该都有属于自己的状态转移函数，但是这里为了方便起见，就先放到一块了
+	if _next_state == Global.State.Pat:
+		print('state pat')
+		#只有处在Idel状态才能进入pat状态
+		if state != Global.State.Idle:
+			return
 		
 		
 	#更新新的状态，然后触发全局总线的信号。
@@ -189,6 +196,7 @@ func _on_focus_exited() -> void:
 #增加互动的功能，摸头的具体实现位置
 func _on_pat_mouse_entered() -> void:
 	print('mouse entered')
+	Try_Enter_State(Global.State.Pat)
 	#todo
 	#这里准备尝试进入pat状态
 	pass # Replace with function body.

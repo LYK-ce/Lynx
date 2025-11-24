@@ -42,6 +42,8 @@ func Play_Anim(_next_state):
 		Global.State.Notice:
 			play("Notice")
 			audio.play()
+		Global.State.Pat:
+			play('Pat')
 			
 	pass
 	
