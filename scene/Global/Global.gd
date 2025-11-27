@@ -8,6 +8,7 @@ enum State{
 	Sleep,
 	Notice,
 	Pat,
+	Dead,		#死亡状态，当心情值归零时进入这个状态
 	Undefined
 }
 

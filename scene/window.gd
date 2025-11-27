@@ -77,6 +77,10 @@ func _ready() -> void:
 	#mainwindow.visible = false
 	self.force_native = false
 	
+	#一开始要显示在右下角
+	var screen := DisplayServer.screen_get_size()
+	self.position = Vector2(screen.x-self.size.x, screen.y-self.size.y)
+	
 
 
 
@@ -138,7 +142,8 @@ func _on_menu_selected(id: int) -> void:
 			var json_string = JSON.stringify(data)
 			EventBus.sig_order.emit(json_string)
 			
-		
+		4:#打开商店系统
+			pass
 		#暂时先什么都不做
 		10: pass
 		11:

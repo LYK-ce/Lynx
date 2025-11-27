@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://c23lho7rlmvep"]
+
+[ext_resource type="Script" uid="uid://x2lb6c02uesa" path="res://scene/store.gd" id="1_24njt"]
+
+[node name="Store" type="Node"]
+script = ExtResource("1_24njt")
+coin_value = null
+
+[node name="Window" type="Window" parent="."]
+oversampling_override = 1.0
+position = Vector2i(100, 100)
+size = Vector2i(512, 512)
+visible = false
+
+[node name="Label" type="Label" parent="Window"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -11.5
+offset_right = 32.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "敬请期待"

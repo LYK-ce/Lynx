@@ -1,10 +1,11 @@
-[gd_scene load_steps=88 format=3 uid="uid://bxp3nnabegmnd"]
+[gd_scene load_steps=89 format=3 uid="uid://bxp3nnabegmnd"]
 
 [ext_resource type="Script" uid="uid://k4itqhvl1x28" path="res://scene/window.gd" id="1_dtm6e"]
 [ext_resource type="Texture2D" uid="uid://dcbyfrmy062a3" path="res://Assets/Sprite/PACK/PACK/cat 1 (64х64).png" id="2_o5c6p"]
 [ext_resource type="Script" uid="uid://byncxfikqkikv" path="res://scene/animated_sprite_2d.gd" id="3_isedw"]
 [ext_resource type="PackedScene" uid="uid://dpjpvxncosmya" path="res://scene/web_socket.tscn" id="4_iw1pq"]
 [ext_resource type="AudioStream" uid="uid://bhfkamav73vri" path="res://Assets/Sound/262312__steffcaffrey__cat-meow1.wav" id="5_o5c6p"]
+[ext_resource type="PackedScene" uid="uid://pp3qdrhncol3" path="res://scene/mood.tscn" id="6_isedw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2x567"]
 atlas = ExtResource("2_o5c6p")
@@ -653,20 +654,24 @@ script = ExtResource("1_dtm6e")
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
 oversampling_override = 1.0
-size = Vector2i(100, 120)
+size = Vector2i(100, 174)
 visible = true
 hide_on_checkable_item_selection = false
-item_count = 5
-item_0/text = "待办"
-item_0/id = 0
-item_1/text = "番茄时钟"
-item_1/id = 1
-item_2/id = 3
-item_2/separator = true
-item_3/text = "取消"
-item_3/id = 10
-item_4/text = "退出"
-item_4/id = 11
+item_count = 7
+item_0/text = "商店"
+item_0/id = 4
+item_1/id = 3
+item_1/separator = true
+item_2/text = "待办"
+item_2/id = 0
+item_3/text = "番茄时钟"
+item_3/id = 1
+item_4/id = 6
+item_4/separator = true
+item_5/text = "取消"
+item_5/id = 10
+item_6/text = "退出"
+item_6/id = 11
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -692,6 +697,8 @@ anchors_preset = 0
 offset_left = 64.0
 offset_right = 192.0
 offset_bottom = 96.0
+
+[node name="Mood" parent="." instance=ExtResource("6_isedw")]
 
 [connection signal="focus_exited" from="." to="." method="_on_focus_exited"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="AnimatedSprite2D" method="_on_animation_finished"]
