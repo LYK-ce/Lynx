@@ -10,10 +10,17 @@ extends Node2D
 
 @onready var particle : GPUParticles2D = $GPUParticles2D
 @onready var sound : AudioStreamPlayer = $AudioStreamPlayer
+@onready var coin_value_text : Label = $Window/value
 
 func _ready() -> void:
-	Change_Coin_Value(10)
 
+	EventBus.sig_open_store.connect(Open_Store)
+	EventBus.sig_coin_change.connect(Change_Coin_Value)
+	#可能需要进行持久化，把心情值读取出来
+
+func Set_Coin(_value):
+	coin_value_text.text = str(_value)
+	
 
 #尝试更改coin value，如果修改成负值就会返回false表示失败。不过说起来现在也用不到coin，所以不会出现减少的情况。
 func Change_Coin_Value(_value)-> bool:
@@ -30,9 +37,10 @@ func Change_Coin_Value(_value)-> bool:
 		return true
 
 func Open_Store():
+	print('window open')
 	window.show()
 
+
 func Close_Store():
-	print(window.visible)
+	print('try to close store')
 	window.hide()
-	print(window.visible)

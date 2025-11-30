@@ -18,10 +18,12 @@ func _ready() -> void:
 	
 	#显然心情值是需要被保存下来的，在每次启动时将这个值读取出来
 	#不一定放在这里做,为了进行测试，我们首先在这里手动设置数值
-	Set_Mood_Value(50)
+	Set_Mood_Value(0)
+	Load()
 	
 	#和信号关联起来
 	EventBus.sig_mood_change.connect(Change_Mood_value)
+	EventBus.sig_update_status.connect(Update)
 
 func Update_Mood_Value():
 	#当信号数值归零时就发出宠物死亡信号，确保mood value在范围内，最后更新progress bar
@@ -41,3 +43,25 @@ func Set_Mood_Value(_value):
 func Change_Mood_value(_value):
 	mood_value += _value
 	Update_Mood_Value()
+
+func Update():
+	print('hello')
+	var save_data :GameSave= null
+	if FileAccess.file_exists('save.tres'):
+		print('exist')
+		save_data = load('save.tres') as GameSave
+	else:
+		save_data = GameSave.new()
+	save_data.mood = mood_value
+	ResourceSaver.save(save_data,'save.tres')
+
+func Load():
+	var save_data : GameSave = null
+	if FileAccess.file_exists('save.tres'):
+		print('exist')
+		save_data = load('save.tres') as GameSave
+		Set_Mood_Value(save_data.mood)
+
+
+	
+		

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="GameSave" load_steps=2 format=3 uid="uid://dgfrkgwunoh84"]
+
+[ext_resource type="Script" uid="uid://dxjsk2ysaugla" path="res://scene/Global/Save.gd" id="1_g0cot"]
+
+[resource]
+script = ExtResource("1_g0cot")
+coin = 15
+mood = 100

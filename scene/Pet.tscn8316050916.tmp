@@ -700,6 +700,7 @@ offset_bottom = 96.0
 
 [node name="Store" parent="." instance=ExtResource("7_iw1pq")]
 position = Vector2(131, 135)
+coin_value = 0
 
 [node name="Mood_bar" type="ProgressBar" parent="."]
 offset_left = 24.0

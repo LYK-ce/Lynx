@@ -15,3 +15,6 @@ enum State{
 var focus_minutes : int = 0
 var focus_seconds : int = 0
 var left_time : int = 0
+
+const Mood_Max : int = 100
+const Mood_Min : int = 0

@@ -6,9 +6,9 @@
 script = ExtResource("1_ofxhw")
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-offset_left = 32.0
+offset_left = 56.0
 offset_top = 24.0
-offset_right = 288.0
+offset_right = 312.0
 offset_bottom = 35.0
 step = 1.0
 value = 50.0
