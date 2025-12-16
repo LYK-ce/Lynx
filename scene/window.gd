@@ -141,7 +141,21 @@ func _input(event):
 		menu.popup()          
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		
 		if event.pressed:
+			if event.double_click:
+				print('double click')
+				var data = {
+				  "type": "call",
+				  "body": {
+					"id": "7",
+					"method": "window.show"
+				  }
+				}
+				#转换成json字符串
+				var json_string = JSON.stringify(data)
+				EventBus.sig_order.emit(json_string)
+				return
 			#如果tween正在运行当中，那么将其打断
 			if tween != null and tween.is_running():
 				tween.kill()
