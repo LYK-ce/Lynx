@@ -66,6 +66,25 @@ func _connect() -> void:
 		}
 	json_string = JSON.stringify(register_clock)
 	_send_text(json_string)
+	
+	#订阅achievement
+	var register_achievement = {
+		"type": "listen",
+		"body": {
+			"channel": "achievement.unlocked"
+		}
+	}
+	json_string = JSON.stringify(register_achievement)
+	_send_text(json_string)
+	
+	var register_coin = {
+		"type": "listen",
+		"body": {
+			"channel": "achievement.coins_changed"
+		}
+	}
+	json_string = JSON.stringify(register_achievement)
+	_send_text(json_string)
 
 func _on_close() -> void:
 	print("连接已关闭")
@@ -103,8 +122,11 @@ func _recv_packets() -> void:
 			if data['body']['channel'] == 'todo.due':
 				pet.last_state = Global.State.Sleep
 				EventBus.sig_request_state_change.emit(Global.State.Notice)
-				
-			# 原逻辑
+			if data['body']['channel']=='achievement.coins_changed':
+				EventBus.sig_coin_change.emit(data['body']['data']['rewardCoins'])
+			if data['body']['channel']=='achievement.stats_updated':
+				EventBus.sig_coin_change.emit(data['body']['data']['coins'])
+			
 			
 
 # ---------- 工具 ----------
